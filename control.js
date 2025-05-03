@@ -1,96 +1,80 @@
 class Calculator {
-  constructor(currentTextElement, previousTextElement) {
-    this.currentTextElement = currentTextElement;
-    this.previousTextElement = previousTextElement;
-    this.currentOperand = "";
-    this.previousOperand = "";
+  constructor(currentEl, previousEl) {
+    this.currentEl = currentEl;
+    this.previousEl = previousEl;
+    this.clear();
   }
 
   clear() {
-    this.currentOperand = "";
-    this.previousOperand = "";
-    this.arthimetic = undefined;
+    this.current = "";
+    this.previous = "";
+    this.operator = null;
+    this.updateDisplay();
   }
+
   delete() {
-    this.currentOperand = this.currentOperand.toString().slice(0, -1);
+    this.current = this.current.toString().slice(0, -1);
+    this.updateDisplay();
   }
 
-  number(number) {
-    this.currentOperand = this.currentOperand + number;
+  appendNumber(num) {
+    this.current += num;
+    this.updateDisplay();
   }
 
-  operation(oprSymbol) {
-    if (this.previousOperand !== "") {
-      this.compute();
-    }
-    this.previousOperand = this.currentOperand;
-    this.currentOperand = "";
-    this.arthimetic = oprSymbol;
+  chooseOperator(op) {
+    if (!this.current) return;
+    if (this.previous) this.compute();
+    this.operator = op;
+    this.previous = this.current;
+    this.current = "";
+    this.updateDisplay();
   }
 
   compute() {
-    if (this.arthimetic === undefined) return;
-    let computed;
-    let curr = parseFloat(this.currentOperand);
-    let pre = parseFloat(this.previousOperand);
-    switch (this.arthimetic) {
-      case "*":
-        computed = curr * pre;
-        break;
-      case "/":
-        computed = pre / curr;
-        break;
-      case "+":
-        computed = curr + pre;
-        break;
-      case "-":
-        computed = pre - curr;
-        break;
-      default:
-        return;
-    }
-    this.previousOperand = "";
-    this.currentOperand = computed;
-    this.currentTextElement.innerText = this.currentOperand;
-    this.currentTextElement.style.color = "grey";
+    const prev = parseFloat(this.previous);
+    const curr = parseFloat(this.current);
+    if (isNaN(prev) || isNaN(curr)) return;
+
+    const ops = {
+      "+": prev + curr,
+      "-": prev - curr,
+      "*": prev * curr,
+      "/": prev / curr,
+    };
+
+    this.current = ops[this.operator] ?? this.current;
+    this.operator = null;
+    this.previous = "";
+    this.updateDisplay(true);
   }
-  update() {
-    this.currentTextElement.innerText = this.currentOperand;
-    this.previousTextElement.innerText = this.previousOperand;
+
+  updateDisplay(isResult = false) {
+    this.currentEl.innerText = this.current;
+    this.previousEl.innerText = this.previous;
+    this.currentEl.style.color = isResult ? "grey" : "white";
   }
 }
 
-const previousOperand = document.querySelector(".previousOperand");
-const currentOperand = document.querySelector(".currentOperand");
-const numberBtn = document.querySelectorAll(".number");
-const operationBtn = document.querySelectorAll(".operation");
-const equalBtn = document.querySelector("[equal]");
-const clearBtn = document.querySelector("[clear]");
-const deleteBtn = document.querySelector("[del]");
+// ==== DOM Setup ====
+const calc = new Calculator(
+  document.querySelector(".currentOperand"),
+  document.querySelector(".previousOperand")
+);
 
-const calculator = new Calculator(currentOperand, previousOperand);
+const addClick = (selector, callback) => {
+  document
+    .querySelectorAll(selector)
+    .forEach((el) =>
+      el.addEventListener("click", () => callback(el.innerText))
+    );
+};
 
-numberBtn.forEach((number) => {
-  number.addEventListener("click", (btn) => {
-    calculator.number(btn.target.innerText);
-    calculator.update();
-  });
-});
+addClick(".number", (num) => calc.appendNumber(num));
+addClick(".operation", (op) => calc.chooseOperator(op));
 
-operationBtn.forEach((operation) => {
-  operation.addEventListener("click", (opr) => {
-    calculator.operation(opr.target.innerText);
-    calculator.update();
-  });
-});
-equalBtn.addEventListener("click", () => {
-  calculator.compute();
-});
-clearBtn.addEventListener("click", (btn) => {
-  calculator.clear();
-  calculator.update();
-});
-deleteBtn.addEventListener("click", () => {
-  calculator.delete();
-  calculator.update();
-});
+document
+  .querySelector("[equal]")
+  .addEventListener("click", () => calc.compute());
+document.querySelector("[clear]").addEventListener("click", () => calc.clear());
+document.querySelector("[del]").addEventListener("click", () => calc.delete());
