@@ -77,20 +77,23 @@ body {
 
 /* History screen */
 .history-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  max-width: 400px;
   height: 100vh;
-  width: 100vw;
-  overflow-y: auto;
   background: #1e1e1e;
   padding: 1rem;
   color: white;
-  position: absolute;
-  top: 0;
-  left: 0;
+  transform: translateX(100%);
+  transition: transform 0.4s ease-in-out;
   z-index: 100;
+  overflow-y: auto;
 }
 
-.hidden {
-  display: none;
+.history-container.visible {
+  transform: translateX(0);
 }
 
 #historyList {

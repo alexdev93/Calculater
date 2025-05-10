@@ -62,12 +62,9 @@ calc.compute = () => {
 
 // Show history
 historyBtn.addEventListener("click", () => {
-  calculatorUI.classList.add("hidden");
-  historyContainer.classList.remove("hidden");
+  historyContainer.classList.add("visible");
 });
 
-// Back to calculator
 backBtn.addEventListener("click", () => {
-  historyContainer.classList.add("hidden");
-  calculatorUI.classList.remove("hidden");
+  historyContainer.classList.remove("visible");
 });
