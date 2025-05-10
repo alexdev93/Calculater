@@ -76,8 +76,8 @@ export class Calculator {
     this.display =
       displayMap[this.operator] ||
       `${this.previous} ${this.operator} ${this.current}`;
-    this.current = ops[this.operator] ?? this.current;
 
+    this.current = ops[this.operator] ?? this.current;
     this.operator = null;
     this.previous = "";
     this.updateDisplay();
