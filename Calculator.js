@@ -86,6 +86,5 @@ export class Calculator {
   updateDisplay() {
     this.currentEl.innerText = this.current;
     this.previousEl.innerText = this.display ?? "";
-    this.currentEl.style.color = "white";
   }
 }
