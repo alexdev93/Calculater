@@ -8,11 +8,11 @@
     <title>Calculator</title>
   </head>
   <body>
+    <div class="history-container hidden">
+      <button id="backBtn">Back</button>
+      <ul id="historyList"></ul>
+    </div>
     <div class="calculator">
-      <div class="history-container">
-        <button id="historyBtn">History</button>
-        <ul id="historyList" class="hidden"></ul>
-      </div>
       <div class="output">
         <p class="previousOperand"></p>
         <!-- <hr /> -->
@@ -36,13 +36,13 @@
         <div class="operation">-</div>
         <div class="number">.</div>
         <div class="number">0</div>
-        <div class="">Hi</div>
+        <div class="history-btn">Hi</div>
         <div class="operation">√</div>
         <div class="operation">x²</div>
         <div class="operation">%</div>
         <div class="span-two" equal>=</div>
       </div>
     </div>
+    <script type="module" src="./main.js"></script>
   </body>
 </html>
-<script type="module" src="./main.js"></script>

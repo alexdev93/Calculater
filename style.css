@@ -72,11 +72,31 @@ hr {
 }
 
 .history-container {
-  margin-top: 1rem;
-  text-align: center;
+  height: 100vh;
+  overflow-y: auto;
+  background: #1e1e1e;
+  padding: 1rem;
+  color: white;
 }
 
 #historyList {
-  list-style-type: none;
+  list-style: none;
   padding: 0;
+  margin-top: 1rem;
+}
+
+#historyList li {
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  background: #333;
+  border-radius: 4px;
+}
+
+#backBtn {
+  padding: 0.5rem 1rem;
+  background: #444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }

@@ -54,3 +54,40 @@ document.addEventListener("keydown", (e) => {
   const handler = keyMap[e.key];
   if (handler) handler();
 });
+
+// History logic
+const historyBtn = document.querySelector(".history-btn");
+const calculatorUI = document.querySelector(".calculator");
+const historyContainer = document.querySelector(".history-container");
+const historyList = document.getElementById("historyList");
+const backBtn = document.getElementById("backBtn");
+
+// Save to history after each compute
+const originalCompute = calc.compute.bind(calc);
+calc.compute = () => {
+  const prev = calc.previous;
+  const op = calc.operator;
+  const curr = calc.current;
+  originalCompute();
+  if (prev || ["√", "x²", "%"].includes(op)) {
+    const result = calc.current;
+    const entry = ["√", "x²", "%"].includes(op)
+      ? `${op}(${curr}) = ${result}`
+      : `${prev} ${op} ${curr} = ${result}`;
+    const li = document.createElement("li");
+    li.textContent = entry;
+    historyList.prepend(li);
+  }
+};
+
+// Show history
+historyBtn.addEventListener("click", () => {
+  calculatorUI.classList.add("hidden");
+  historyContainer.classList.remove("hidden");
+});
+
+// Back to calculator
+backBtn.addEventListener("click", () => {
+  historyContainer.classList.add("hidden");
+  calculatorUI.classList.remove("hidden");
+});
