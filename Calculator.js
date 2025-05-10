@@ -1,10 +1,8 @@
+import { displayMap, binaryOperators, unaryOperators } from "./utils.js";
 export class Calculator {
   constructor(currentEl, previousEl) {
     this.currentEl = currentEl;
     this.previousEl = previousEl;
-
-    this.binaryOps = ["+", "-", "*", "/"];
-    this.unaryOps = ["√", "x²"];
 
     this.clear();
   }
@@ -28,17 +26,17 @@ export class Calculator {
   }
 
   chooseOperator(op) {
-    if (!this.current && !this.unaryOps.includes(op)) return;
+    if (!this.current && !unaryOperators.includes(op)) return;
 
     if (
       this.previous &&
       this.operator &&
-      this.binaryOps.includes(this.operator)
+      binaryOperators.includes(this.operator)
     ) {
       this.compute();
     }
 
-    if (this.unaryOps.includes(op)) {
+    if (unaryOperators.includes(op)) {
       this.operator = op;
       this.compute();
       return;
@@ -55,37 +53,36 @@ export class Calculator {
     const prev = parseFloat(this.previous);
     const curr = parseFloat(this.current);
 
-    if (this.binaryOps.includes(this.operator) && (isNaN(prev) || isNaN(curr)))
+    if (binaryOperators.includes(this.operator) && (isNaN(prev) || isNaN(curr)))
       return;
-    if (this.unaryOps.includes(this.operator) && isNaN(curr)) return;
+    if (unaryOperators.includes(this.operator) && isNaN(curr)) return;
 
     const ops = {
-      "+": prev + curr,
-      "-": prev - curr,
-      "*": prev * curr,
-      "/": prev / curr,
-      "√": Math.sqrt(curr),
-      "x²": Math.pow(curr, 2),
-      "%": prev * (curr / 100),
+      "+": parseFloat(prev + curr),
+      "-": parseFloat(prev - curr),
+      "*": parseFloat(prev * curr),
+      "/": parseFloat(prev / curr),
+      "%": parseFloat((prev * curr) / 100),
+      "√": parseFloat(Math.sqrt(curr)),
+      "x²": parseFloat(Math.pow(curr, 2)),
     };
 
-    const displayMap = {
-      "+": (a, b) => `${a} + ${b}`,
-      "-": (a, b) => `${a} - ${b}`,
-      "*": (a, b) => `${a} × ${b}`,
-      "/": (a, b) => `${a} ÷ ${b}`,
-      "√": (_, b) => `√(${b})`,
-      "x²": (_, b) => `(${b})²`,
-      "%": (a, b) => `${b}% of ${a}`,
-    };
+    const result =
+      typeof ops[this.operator] === "function"
+        ? ops[this.operator](prev, curr)
+        : ops[this.operator];
 
-    this.display =
+    const formatted =
       displayMap[this.operator]?.(this.previous, this.current) ??
       `${this.previous} ${this.operator} ${this.current}`;
 
-    this.current = ops[this.operator] ?? this.current;
-    this.operator = null;
+    this.display = formatted;
+    this.current = result;
     this.previous = "";
+    this.operator = null;
+
+    this.result = `${formatted} = ${result}`;
+
     this.updateDisplay();
   }
 
