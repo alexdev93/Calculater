@@ -66,3 +66,17 @@ hr {
 .span-two {
   grid-column: span 2;
 }
+
+.hidden {
+  display: none;
+}
+
+.history-container {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+#historyList {
+  list-style-type: none;
+  padding: 0;
+}

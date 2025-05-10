@@ -1,4 +1,4 @@
-class Calculator {
+export class Calculator {
   constructor(currentEl, previousEl) {
     this.currentEl = currentEl;
     this.previousEl = previousEl;
@@ -6,7 +6,7 @@ class Calculator {
   }
 
   clear() {
-    this.current = "";
+    this.current = "0";
     this.previous = "";
     this.operator = null;
     this.updateDisplay();
@@ -18,15 +18,17 @@ class Calculator {
   }
 
   appendNumber(num) {
-    this.current += num;
+    this.current = this.current == "0" ? num : this.current + num;
     this.updateDisplay();
   }
 
   chooseOperator(op) {
+    this.display = null;
     if (!this.current) return;
     if (this.previous) this.compute();
     this.operator = op;
     this.previous = this.current;
+    this.display = `${this.current} ${this.operator}`;
     this.current = "";
     this.updateDisplay();
   }
@@ -43,38 +45,18 @@ class Calculator {
       "/": prev / curr,
     };
 
+    this.display = `${this.previous} ${this.operator} ${this.current}`;
+
     this.current = ops[this.operator] ?? this.current;
+    const op = this.operator;
     this.operator = null;
     this.previous = "";
-    this.updateDisplay(true);
+    this.updateDisplay();
   }
 
-  updateDisplay(isResult = false) {
+  updateDisplay() {
     this.currentEl.innerText = this.current;
-    this.previousEl.innerText = this.previous;
-    this.currentEl.style.color = isResult ? "grey" : "white";
+    this.previousEl.innerText = this.display ?? "";
+    this.currentEl.style.color = "white";
   }
 }
-
-// ==== DOM Setup ====
-const calc = new Calculator(
-  document.querySelector(".currentOperand"),
-  document.querySelector(".previousOperand")
-);
-
-const addClick = (selector, callback) => {
-  document
-    .querySelectorAll(selector)
-    .forEach((el) =>
-      el.addEventListener("click", () => callback(el.innerText))
-    );
-};
-
-addClick(".number", (num) => calc.appendNumber(num));
-addClick(".operation", (op) => calc.chooseOperator(op));
-
-document
-  .querySelector("[equal]")
-  .addEventListener("click", () => calc.compute());
-document.querySelector("[clear]").addEventListener("click", () => calc.clear());
-document.querySelector("[del]").addEventListener("click", () => calc.delete());

@@ -9,9 +9,13 @@
   </head>
   <body>
     <div class="calculator">
+      <div class="history-container">
+        <button id="historyBtn">History</button>
+        <ul id="historyList" class="hidden"></ul>
+      </div>
       <div class="output">
         <p class="previousOperand"></p>
-        <hr />
+        <!-- <hr /> -->
         <p class="currentOperand"></p>
       </div>
       <div class="button-part">
@@ -37,4 +41,4 @@
     </div>
   </body>
 </html>
-<script src="control.js"></script>
+<script type="module" src="./main.js"></script>
