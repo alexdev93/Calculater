@@ -66,15 +66,21 @@ export class Calculator {
       "/": prev / curr,
       "√": Math.sqrt(curr),
       "x²": Math.pow(curr, 2),
+      "%": prev * (curr / 100),
     };
 
     const displayMap = {
-      "√": `√(${this.current})`,
-      "x²": `(${this.current})²`,
+      "+": (a, b) => `${a} + ${b}`,
+      "-": (a, b) => `${a} - ${b}`,
+      "*": (a, b) => `${a} × ${b}`,
+      "/": (a, b) => `${a} ÷ ${b}`,
+      "√": (_, b) => `√(${b})`,
+      "x²": (_, b) => `(${b})²`,
+      "%": (a, b) => `${b}% of ${a}`,
     };
 
     this.display =
-      displayMap[this.operator] ||
+      displayMap[this.operator]?.(this.previous, this.current) ??
       `${this.previous} ${this.operator} ${this.current}`;
 
     this.current = ops[this.operator] ?? this.current;
